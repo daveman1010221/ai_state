@@ -1,0 +1,9 @@
+# Session files can be large
+pi/agent/sessions/
+
+# Ollama identity key — regenerates automatically
+ollama/id_ed25519
+ollama/id_ed25519.pub
+
+# Ollama model blobs — too large for git
+ollama/models/
