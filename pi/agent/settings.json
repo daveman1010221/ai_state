@@ -1,4 +1,5 @@
 {
   "default_provider": "ollama",
-  "default_model": "qwen2.5-coder:32b-instruct-q4_K_M"
+  "default_model": "local-model",
+  "lastChangelogVersion": "0.60.0"
 }
