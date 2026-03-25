@@ -2,7 +2,6 @@
 
 Proptests use the `proptest` crate to generate arbitrary inputs. They are NOT
 regular loops with hardcoded values. Always use this exact pattern:
-
 ```rust
 use proptest::prelude::*;
 
@@ -33,16 +32,15 @@ Never write proptest code and then discover it won't compile because
 the dependency is missing.
 
 ## Common strategies
-
 ```rust
+// Non-empty string — use regex, NOT .filter()
+fn test(s in ".+") { ... }
+
 // Arbitrary string
 fn test(s in any::<String>()) { ... }
 
 // Arbitrary bytes
 fn test(bytes in any::<Vec<u8>>()) { ... }
-
-// Non-empty string
-fn test(s in ".+") { ... }
 
 // String matching a regex
 fn test(topic in "[a-zA-Z0-9._/-]{1,64}") { ... }
@@ -68,6 +66,17 @@ fn test(s in "\\PC*") { ... }
 - proptest runs 256 cases by default — no need to loop manually
 - For serde roundtrips: serialize then deserialize, prop_assert_eq!(original, deserialized)
 - For panic-safety tests: just call the function, proptest catches panics automatically
+
+## WRONG — do not use .filter() on a strategy:
+```rust
+// DOES NOT COMPILE — .filter() is an iterator method, not a proptest strategy method
+fn test(s in any::<String>().filter(|s| !s.is_empty())) { ... }
+```
+
+## RIGHT — use a regex strategy for non-empty strings:
+```rust
+fn test(s in ".+") { ... }
+```
 
 ## WRONG — this is NOT a proptest:
 ```rust
@@ -112,3 +121,9 @@ proptest! {
     fn prop_my_test(input in any::<String>()) { ... }
 }
 ```
+
+## Success condition
+
+Never use an exact test count as a success condition. Instead:
+- Run `cargo test --package {crate} --test props` and verify zero failures
+- All tests must show `ok`, none `FAILED`
