@@ -16,3 +16,14 @@ When writing tests for Rust ractor actors:
 - NEVER write assert!(true) as the only assertion. Every test must assert a real value.
 - The Msg enum IS the public API. Read the Msg enum before writing any test.
 - Run cargo check after EVERY file. Fix errors before moving on.
+
+## NEVER rewrite a file to fix errors
+
+When cargo check or cargo test reports errors, fix ONLY the erroring lines.
+Use the edit tool with the minimum change needed.
+"The file is too complex to edit surgically" is never a valid reason to rewrite.
+If you find yourself writing a full file replacement, STOP. Read the error,
+find the exact line, make the minimal edit.
+
+Rewriting a working file to fix one error is forbidden. It destroys working
+code and creates new bugs.
